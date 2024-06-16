@@ -5,8 +5,10 @@
 
 
 //dependencies
+//transfer data over the Hyper Text Transfer Protocol (HTTP)
 const http = require('http');
-
+//The URL module splits up a web address into readable parts.
+const url = require('url');
 
 //app object - module scaffolding: Scaffolding helps generate a basic structure for your project, a skeleton for the application.
 const app = {};
@@ -26,6 +28,13 @@ app.createServer =()=>{
 }
 
 app.handleReqRes = (req, res) =>{
+   // application er mul kaj ekehane e hobe.
+   //request handle
+   //get that url and parse it
+   //The url.parse() method returns an object with each part of the address as properties. takes two parameters; urlString: holds the URL string which needs to parse. parseQueryString: whether to parse (conversion. in this case simply turn into an object) the query string in url. If set to true then the query property will be set to an object. If set to false then the query property will be an unparsed, undecoded string. The default value is false.
+   const parseUrl = url.parse(req.url, false);
+   //console.log(parseUrl); 
+   const path = parseUrl.pathname
    //responce handle
    res.end('Hello World');
 }

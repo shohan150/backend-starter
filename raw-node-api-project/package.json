@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "start": "nodemon index",
+    "dummy": "nodemon index",
+    "description": "start chara onno j kono nam use korle, npm run likhe hbe. sudhu start er khetre npm likhle e cholbe"
+  },
   "dependencies": {
     "eslint": "^9.5.0",
     "lodash": "^4.17.21"
