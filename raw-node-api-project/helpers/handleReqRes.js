@@ -48,18 +48,7 @@ handler.handleReqRes = (req, res) =>{
    //now invoke the chosenHandler function: chosenHandler();
    //ekhn chosenHandler to onno ekta module k refer kore ache. shei module e value gulo pete, ei value gulo k function invoke korar somoy parameter hisebe pathiye dite hobe, jate kore, chosenHandler invoke howa mane, refer kora func ta invoke howa r refer kora func ta pass kora parameter(requestProperties) niye e execute hoi. 
    //tar sathe 2nd parameter hisebe chosenHandler k ekta callback function diye deya hocche. ei call back func k handler er vitor theke invoke korte hobe. handler statusCode r payload er value diye ei 2nd parameter e pass kora function k invoke korbe. shei pass kora value er upor depend kore finally response pathano hobe. 
-   chosenHandler(requestProperties, (statusCode, payload) => {
-      //check statusCode and payload
-       statusCode = typeof statusCode === 'number' ? statusCode : 500;
-       payload = typeof payload === 'object' ? payload : {};
-
-       const payloadString = JSON.stringify(payload);
-
-       // return the final response
-       res.writeHead(statusCode);
-       res.end(payloadString);
-   });
-
+   //place chosenHandler inside the 'end' eventHandler so that we can access realData inside the handler.
 
    req.on("data", (buffer)=>{
       //convert buffer to data and store
@@ -72,6 +61,18 @@ handler.handleReqRes = (req, res) =>{
       realData += decoder.end();
       //realData filled up. ekhon setake dekhte parbo server e. 
       // console.log(realData);
+
+      chosenHandler(requestProperties, (statusCode, payload) => {
+         //check statusCode and payload
+          statusCode = typeof statusCode === 'number' ? statusCode : 500;
+          payload = typeof payload === 'object' ? payload : {};
+   
+          const payloadString = JSON.stringify(payload);
+   
+          // return the final response
+          res.writeHead(statusCode);
+          res.end(payloadString);
+      });
 
       //responce handle
       //streaming shes howa mane request kore complete. tokhon reponse server theke client er kache pathai.

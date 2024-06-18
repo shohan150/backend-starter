@@ -9,6 +9,8 @@
 const http = require('http');
 //import request respose handler function
 const {handleReqRes} = require('./helpers/handleReqRes');
+//environment variables
+const environment = require('./helpers/environments');
 
 //app object - module scaffolding: Scaffolding helps generate a basic structure for your project, a skeleton for the application.
 const app = {};
@@ -27,7 +29,7 @@ app.createServer =()=>{
    //this module takes a callback function what will create the server object and will handle request and response. 
    const server = http.createServer(app.handleReqRes);
 
-   server.listen(app.config.port, ()=> {console.log(`listening to port ${app.config.port}`)});
+   server.listen(environment.port, ()=> {console.log(`listening to port ${environment.port}`)});
 }
 
 

@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "nodemon index",
+    "start": "SET NODE_ENV=staging && nodemon index",
+    "production": "SET NODE_ENV=production && nodemon index",
     "dummy": "nodemon index",
     "description": "start chara onno j kono nam use korle, npm run likhe hbe. sudhu start er khetre npm likhle e cholbe"
   },
