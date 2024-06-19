@@ -76,7 +76,7 @@ handler.handleReqRes = (req, res) =>{
 
       //responce handle
       //streaming shes howa mane request kore complete. tokhon reponse server theke client er kache pathai.
-      res.end('Hello World');
+      // res.end('Hello World');
    })
 
 }
