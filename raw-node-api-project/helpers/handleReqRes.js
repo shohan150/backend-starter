@@ -5,6 +5,7 @@ const url = require('url');
 const {StringDecoder} = require('string_decoder');
 const routes = require('../routes');
 const { notFoundHandler } = require('../handlers/routeHandlers/notFoundHandler');
+const {parseJSON} = require('../helpers/utilities');
 
 //module scaffloding
 const handler = {};
@@ -19,7 +20,7 @@ handler.handleReqRes = (req, res) =>{
    const queryString = parseUrl.query;
    // using regex to remove the forward slash at the beginning and end of the link. So that we always get the link in the same format and then perform routing. Cause people may request the same page with forward slash at the end or not but we need to send data to client in both scenerio. 
    const trimmedPath = path.replace(/^\/+|\/+$/g, "");
-   //detach request type or method
+   //request type or method: GET, POST, PATCH, DELETE
    const method = req.method.toLowerCase();
    //get the website metadata (sent as headers) from server.
    const headersObject = req.headers;
@@ -60,7 +61,12 @@ handler.handleReqRes = (req, res) =>{
       //decoder er kaj shes. take seta janiye dao. 
       realData += decoder.end();
       //realData filled up. ekhon setake dekhte parbo server e. 
-      // console.log(realData);
+      //console.log(realData);
+
+      //include realData inside requestProperties. so that we can access the data sent by client in the requestProperties to perform processing.
+      requestProperties.body = parseJSON(realData);
+      //console.log(realData, requestProperties.body);
+      //ekhn realData holo, buffer theke stringDecoder use kore UTF-8 encoding kore buffer k string e convert kore save korchilam realData er vitor. kintu userHandler er vitor operations perform korte amader string theke object e convert korte hobe realData k JSON.parse diye. Tobe r ekta issue ache. amra user k trust korte parbo na j valid stringified object ba JSON pathabe. seta ensure korte amra utlity function use korbo. 
 
       chosenHandler(requestProperties, (statusCode, payload) => {
          //check statusCode and payload
@@ -69,9 +75,14 @@ handler.handleReqRes = (req, res) =>{
    
           const payloadString = JSON.stringify(payload);
    
+          
+          //req e jemon client request er sathe header/metadata pathate pare. sevabe, res eo server, responce er sathe kichu header pathiye dite pare client k. by default kichu pathai o, jeta amra postman ei dekhte pai, reponce er sathe. ekhane amra reponce er sathe content-type header add korbo jate client bujhte pare, se server theke ki dhoroner data pacche. 
+          res.setHeader('Content-Type', 'application/json');
+
           // return the final response
           res.writeHead(statusCode);
           res.end(payloadString);
+
       });
 
       //responce handle
