@@ -52,7 +52,8 @@ handler._users.post = (requestProperties, callback) => {
             : false;
 
     if (firstName && lastName && phone && password && tosAgreement) {
-        // make sure that the user doesn't already exists
+        // make sure that the user doesn't already exists. na thakle amra user create korbo r thakle error throw korbo callback e. tarmane requirement holo user na thaka ba error asle tokhon user create kora. data readr korata requirement na. sejonno callback e sudhu error nile e hocche. data neyar dorkar nai. 
+      
         data.read('users', phone, (err1) => {
             if (err1) {
                 const userObject = {
@@ -73,12 +74,14 @@ handler._users.post = (requestProperties, callback) => {
                     }
                 });
             } else {
+               //cilent already exists. this is server side problem. 
                 callback(500, {
                     error: 'There was a problem in server side!',
                 });
             }
         });
     } else {
+      //client er request e kono problem thakle, 400 error dite hoi.
         callback(400, {
             error: 'You have a problem in your request',
         });
@@ -89,15 +92,16 @@ handler._users.post = (requestProperties, callback) => {
 handler._users.get = (requestProperties, callback) => {
     // check the phone number if valid
     const phone =
-        typeof requestProperties.queryStringObject.phone === 'string' &&
-        requestProperties.queryStringObject.phone.trim().length === 11
-            ? requestProperties.queryStringObject.phone
+        typeof requestProperties.queryString.phone === 'string' &&
+        requestProperties.queryString.phone.trim().length === 11
+            ? requestProperties.queryString.phone
             : false;
     if (phone) {
         // lookup the user
-        data.read('users', phone, (err, u) => {
-            const user = { ...parseJSON(u) };
+        data.read('users', phone, (err, uData) => {
+            const user = { ...parseJSON(uData) };
             if (!err && user) {
+               //user er data callback e pathanor age tar password remove kore dite hobe. Obossoi password k reveal kore deya jabe na. r first e uData niye tarpor take spread kore abar user const e neyar karon holo, parameter e pawa data k direct mutate kora recommend kore na eslint. sejonno onno variable e niye, shei variable theke password ta remove kore, data ta callback e pathiye dei. 
                 delete user.password;
                 callback(200, user);
             } else {
@@ -151,7 +155,7 @@ handler._users.put = (requestProperties, callback) => {
                         userData.firstName = firstName;
                     }
                     if (lastName) {
-                        userData.firstName = firstName;
+                        userData.lastName = lastName;
                     }
                     if (password) {
                         userData.password = hash(password);
@@ -191,9 +195,9 @@ handler._users.put = (requestProperties, callback) => {
 handler._users.delete = (requestProperties, callback) => {
     // check the phone number if valid
     const phone =
-        typeof requestProperties.queryStringObject.phone === 'string' &&
-        requestProperties.queryStringObject.phone.trim().length === 11
-            ? requestProperties.queryStringObject.phone
+        typeof requestProperties.queryString.phone === 'string' &&
+        requestProperties.queryString.phone.trim().length === 11
+            ? requestProperties.queryString.phone
             : false;
 
     if (phone) {
