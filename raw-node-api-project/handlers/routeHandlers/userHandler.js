@@ -3,6 +3,7 @@
 const data = require('../../lib/data');
 const { hash } = require('../../helpers/utilities');
 const { parseJSON } = require('../../helpers/utilities');
+const tokenHandler = require('./TokenHandler')
 
 // module scaffolding
 const handler = {};
@@ -88,7 +89,7 @@ handler._users.post = (requestProperties, callback) => {
     }
 };
 
-// @TODO: Authentication
+// @TODO: Authentication - done
 handler._users.get = (requestProperties, callback) => {
     // check the phone number if valid
     const phone =
@@ -97,17 +98,28 @@ handler._users.get = (requestProperties, callback) => {
             ? requestProperties.queryString.phone
             : false;
     if (phone) {
-        // lookup the user
-        data.read('users', phone, (err, uData) => {
-            const user = { ...parseJSON(uData) };
-            if (!err && user) {
-               //user er data callback e pathanor age tar password remove kore dite hobe. Obossoi password k reveal kore deya jabe na. r first e uData niye tarpor take spread kore abar user const e neyar karon holo, parameter e pawa data k direct mutate kora recommend kore na eslint. sejonno onno variable e niye, shei variable theke password ta remove kore, data ta callback e pathiye dei. 
-                delete user.password;
-                callback(200, user);
-            } else {
-                callback(404, {
-                    error: 'Requested user was not found!',
+        //verify token
+        let token = typeof(requestProperties.headersObject.token) === "string"?requestProperties.headersObject.token : false;
+
+        tokenHandler._token.verify(token, phone, (tokenId)=>{
+            if(tokenId){
+                //successful hle lookup the user. first ei kaj ta directly kortam. ekhm same code verification er por execute korchi.
+                data.read('users', phone, (err, uData) => {
+                    const user = { ...parseJSON(uData) };
+                    if (!err && user) {
+                    //user er data callback e pathanor age tar password remove kore dite hobe. Obossoi password k reveal kore deya jabe na. r first e uData niye tarpor take spread kore abar user const e neyar karon holo, parameter e pawa data k direct mutate kora recommend kore na eslint. sejonno onno variable e niye, shei variable theke password ta remove kore, data ta callback e pathiye dei. 
+                        delete user.password;
+                        callback(200, user);
+                    } else {
+                        callback(404, {
+                            error: 'Requested user was not found!',
+                        });
+                    }
                 });
+            } else{
+                callback(403, {
+                    error: "Authentication failed"
+                })
             }
         });
     } else {
@@ -147,38 +159,51 @@ handler._users.put = (requestProperties, callback) => {
     if (phone) {
         if (firstName || lastName || password) {
             // loopkup the user
-            data.read('users', phone, (err1, uData) => {
-                const userData = { ...parseJSON(uData) };
+            //ekhon ekahne verification bosabo. tarpor read korbo. 
+        //verify token
+        let token = typeof(requestProperties.headersObject.token) === "string"?requestProperties.headersObject.token : false;
 
-                if (!err1 && userData) {
-                    if (firstName) {
-                        userData.firstName = firstName;
-                    }
-                    if (lastName) {
-                        userData.lastName = lastName;
-                    }
-                    if (password) {
-                        userData.password = hash(password);
-                    }
-
-                    // store to database
-                    data.update('users', phone, userData, (err2) => {
-                        if (!err2) {
-                            callback(200, {
-                                message: 'User was updated successfully!',
-                            });
-                        } else {
-                            callback(500, {
-                                error: 'There was a problem in the server side!',
-                            });
+        tokenHandler._token.verify(token, phone, (tokenId)=>{
+            if(tokenId){
+                //successful hle lookup the user. first ei kaj ta directly kortam. ekhm same code verification er por execute korchi.
+                data.read('users', phone, (err1, uData) => {
+                    const userData = { ...parseJSON(uData) };
+    
+                    if (!err1 && userData) {
+                        if (firstName) {
+                            userData.firstName = firstName;
                         }
-                    });
-                } else {
-                    callback(400, {
-                        error: 'You have a problem in your request!',
-                    });
-                }
-            });
+                        if (lastName) {
+                            userData.lastName = lastName;
+                        }
+                        if (password) {
+                            userData.password = hash(password);
+                        }
+    
+                        // store to database
+                        data.update('users', phone, userData, (err2) => {
+                            if (!err2) {
+                                callback(200, {
+                                    message: 'User was updated successfully!',
+                                });
+                            } else {
+                                callback(500, {
+                                    error: 'There was a problem in the server side!',
+                                });
+                            }
+                        });
+                    } else {
+                        callback(400, {
+                            error: 'You have a problem in your request!',
+                        });
+                    }
+                });
+            } else{
+                callback(403, {
+                    error: "Authentication failed"
+                })
+            }
+        });
         } else {
             callback(400, {
                 error: 'You have a problem in your request!',
@@ -202,12 +227,24 @@ handler._users.delete = (requestProperties, callback) => {
 
     if (phone) {
         // lookup the user
-        data.read('users', phone, (err1, userData) => {
-            if (!err1 && userData) {
-                data.delete('users', phone, (err2) => {
-                    if (!err2) {
-                        callback(200, {
-                            message: 'User was successfully deleted!',
+        //verify token
+        let token = typeof(requestProperties.headersObject.token) === "string"?requestProperties.headersObject.token : false;
+
+        tokenHandler._token.verify(token, phone, (tokenId)=>{
+            if(tokenId){
+                //successful hle lookup the user. first ei kaj ta directly kortam. ekhm same code verification er por execute korchi.
+                data.read('users', phone, (err1, userData) => {
+                    if (!err1 && userData) {
+                        data.delete('users', phone, (err2) => {
+                            if (!err2) {
+                                callback(200, {
+                                    message: 'User was successfully deleted!',
+                                });
+                            } else {
+                                callback(500, {
+                                    error: 'There was a server side error!',
+                                });
+                            }
                         });
                     } else {
                         callback(500, {
@@ -215,12 +252,13 @@ handler._users.delete = (requestProperties, callback) => {
                         });
                     }
                 });
-            } else {
-                callback(500, {
-                    error: 'There was a server side error!',
-                });
+            } else{
+                callback(403, {
+                    error: "Authentication failed"
+                })
             }
         });
+
     } else {
         callback(400, {
             error: 'There was a problem in your request!',
