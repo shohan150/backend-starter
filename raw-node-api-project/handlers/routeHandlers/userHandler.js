@@ -15,6 +15,7 @@ handler.userHandler = (requestProperties, callback) => {
       //condition meet hle, corresponding function k invoke kori useHandler e pawa 2 ta parameter diye. handler._users.methodName(requestProperties, callback);
         handler._users[requestProperties.method](requestProperties, callback);
     } else {
+        // not in acceptedMethods, invoke callback with 405 status code
         callback(405);
     }
 };
@@ -22,6 +23,7 @@ handler.userHandler = (requestProperties, callback) => {
 handler._users = {};
 
 handler._users.post = (requestProperties, callback) => {
+    //check if each value sent by user with request is in valid format
     const firstName =
         typeof requestProperties.body.firstName === 'string' &&
         requestProperties.body.firstName.trim().length > 0
@@ -51,12 +53,14 @@ handler._users.post = (requestProperties, callback) => {
         requestProperties.body.tosAgreement
             ? requestProperties.body.tosAgreement
             : false;
-
+    //if all values provided, start processing
     if (firstName && lastName && phone && password && tosAgreement) {
-        // make sure that the user doesn't already exists. na thakle amra user create korbo r thakle error throw korbo callback e. tarmane requirement holo user na thaka ba error asle tokhon user create kora. data readr korata requirement na. sejonno callback e sudhu error nile e hocche. data neyar dorkar nai. 
-      
+        // make sure that the user doesn't already exist. na thakle amra user create korbo r thakle error throw korbo callback e. tarmane requirement holo user na thaka ba error asle tokhon user create kora. data read korata requirement na. sejonno callback e sudhu error nile e hocche. data neyar dorkar nai.
         data.read('users', phone, (err1) => {
+            //mane lib.read() try korbe fs.readFile diye data read korte. file na thakle read korte parbe na, tokhon error return korbe sudhu, kono data return korbe na. shei error k niye lib.read() er vitor callback k invoke kora ache ei error o data diye. tahole shei callback eror ta peye gelo. kintu callback function konta? eta. ekhane declare kora function take e invoke kora hobe lib.read() er vitor. logic simple. lib.read k jemon, folder name, file name bole dicchi, temnivabe callback function ta ki hobe setao bole dicchi.
+            //tahole file read korte giye error pawa mane file nai. tahole file create koro.  
             if (err1) {
+                //the data to ba paased to the create function.
                 const userObject = {
                     firstName,
                     lastName,
@@ -66,11 +70,14 @@ handler._users.post = (requestProperties, callback) => {
                 };
                 // store the user to db
                 data.create('users', phone, userObject, (err2) => {
+                    //err2 te false bade kono value pawa mane e, unsuccessful operation. karon kono eoor hle e tokhon, kono text content/string diye callback k invoke kora hoyeche lib.create er vitor. r sudhu sob step complte hle e callback k false diye invoke kora hoyeche. tarmane err2 te false pele, operation successful. 
                     if (!err2) {
                         callback(200, {
                             message: 'User was created successfully!',
                         });
                     } else {
+                        //callback was invoked with a value. so, error has occured at a stage. we don't know exactly what stage, but it has occured. to see exactly what error has occured inside lib.create() :
+                        //console.log(err2);
                         callback(500, { error: 'Could not create user!' });
                     }
                 });

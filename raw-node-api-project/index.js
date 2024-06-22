@@ -14,7 +14,7 @@ const environment = require('./helpers/environments');
 //import data file
 const data = require('./lib/data');
 
-//app object - module scaffolding: Scaffolding helps generate a basic structure for your project, a skeleton for the application.
+//app object - module scaffolding: Scaffolding generate a basic structure for your project, a skeleton for the application.
 const app = {};
 
 // //testing file system
@@ -24,9 +24,9 @@ const app = {};
 // data.delete('test', 'newFile', (err)=>console.log(err));
 
 //configuration
-app.config={
-   port: 3000 
-};
+// app.config={
+//    port: 3000 
+// };
 
 // application er mul kaj ekehane e hobe.
 app.handleReqRes = handleReqRes;

@@ -6,7 +6,7 @@ const environments = {};
 environments.staging = {
     port: 3000,
     envName: 'staging',
-    secretKey: 'dummy345'
+    secretKey: 'dummy123'
 };
 
 // production environment
@@ -15,6 +15,7 @@ environments.production = {
     envName: 'production',
     secretKey: 'dummy456'
 };
+//console.log(environments, process.env.NODE_ENV);
 
 // determine which environment was passed. if a string is passed to NODE_ENV take that value else take staging.
 const currentEnvironment =
