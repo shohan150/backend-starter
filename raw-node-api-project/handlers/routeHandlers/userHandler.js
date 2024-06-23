@@ -98,7 +98,7 @@ handler._users.post = (requestProperties, callback) => {
 
 // @TODO: Authentication - done
 handler._users.get = (requestProperties, callback) => {
-    // check the phone number if valid
+    // check the phone number if valid. why checking again and again?! because each request are separate.
     const phone =
         typeof requestProperties.queryString.phone === 'string' &&
         requestProperties.queryString.phone.trim().length === 11
@@ -110,7 +110,8 @@ handler._users.get = (requestProperties, callback) => {
 
         tokenHandler._token.verify(token, phone, (tokenId)=>{
             if(tokenId){
-                //successful hle lookup the user. first ei kaj ta directly kortam. ekhm same code verification er por execute korchi.
+                //successful hle, ei phone er against e thaka existing token expire hoi ni ekhono.Now, lookup the user in the db.
+                //first e ei kaj ta directly kortam. ekhm same code verification er por execute korchi.
                 data.read('users', phone, (err, uData) => {
                     const user = { ...parseJSON(uData) };
                     if (!err && user) {
@@ -165,8 +166,8 @@ handler._users.put = (requestProperties, callback) => {
 
     if (phone) {
         if (firstName || lastName || password) {
-            // loopkup the user
-            //ekhon ekahne verification bosabo. tarpor read korbo. 
+        // loopkup the user
+        //ekhon ekahne verification bosabo. tarpor read korbo.
         //verify token
         let token = typeof(requestProperties.headersObject.token) === "string"?requestProperties.headersObject.token : false;
 
