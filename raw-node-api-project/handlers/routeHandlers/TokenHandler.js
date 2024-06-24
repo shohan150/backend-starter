@@ -37,7 +37,7 @@ handler._token.post = (requestProperties, callback) => {
     if (phone && password) {
         data.read('users', phone, (err1, userData) => {
          //server e amra password k hash kore store korechi. sejonno login korar somoy provided password keo hash kore, main password er sathe checking korte hobe. 
-         console.log(phone, password, userData);
+         //console.log(phone, password, userData);
             const hashedpassword = hash(password);
             if (hashedpassword === parseJSON(userData).password) {
                
@@ -64,6 +64,7 @@ handler._token.post = (requestProperties, callback) => {
                 });
             } else {
                 callback(400, {
+                    //match na korle, password match kore ni. 
                     error: 'Password is not valid!',
                 });
             }
