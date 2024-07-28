@@ -24,7 +24,7 @@ utilities.parseJSON = (jsonString) => {
 // hash string
 utilities.hash = (str) => {
     if (typeof str === 'string' && str.length > 0) {
-        console.log(environments, process.env.NODE_ENV);
+        //console.log(environments, process.env.NODE_ENV);
         const hash = crypto.createHmac('sha256', environments.secretKey).update(str).digest('hex');
         return hash;
     }
@@ -33,8 +33,7 @@ utilities.hash = (str) => {
 
 // create random string
 utilities.createRandomString = (strlength) => {
-   let length = strlength;
-   length = typeof strlength === 'number' && strlength > 0 ? strlength : false;
+   let length = typeof strlength === 'number' && strlength > 0 ? strlength : false;
 
    if (length) {
        const possiblecharacters = 'abcdefghijklmnopqrstuvwxyz1234567890';

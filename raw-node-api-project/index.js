@@ -12,7 +12,7 @@ const {handleReqRes} = require('./helpers/handleReqRes');
 //environment variables
 const environment = require('./helpers/environments');
 //import data file
-const data = require('./lib/data');
+//const data = require('./lib/data');
 
 //app object - module scaffolding: Scaffolding generate a basic structure for your project, a skeleton for the application.
 const app = {};

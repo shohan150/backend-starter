@@ -18,11 +18,11 @@ handler.handleReqRes = (req, res) =>{
    //console.log(parseUrl); 
    const path = parseUrl.pathname;
    const queryString = parseUrl.query;
-   // using regex to remove the forward slash at the beginning and end of the link. So that we always get the link in the same format and then perform routing. Cause people may request the same page with forward slash at the end or not but we need to send data to client in both scenerio. 
+   // using regex to remove the forward slash at the beginning and end of the link. So that we always get the link in the same format and then perform routing. Cause people may request the same page with forward slash at the end or not(/users or /users/) but we need to send data to client in both scenerio. 
    const trimmedPath = path.replace(/^\/+|\/+$/g, "");
    //request type or method: GET, POST, PATCH, DELETE
    const method = req.method.toLowerCase();
-   //get the website metadata (sent as headers) from server.
+   //get the website metadata (sent as headers).
    const headersObject = req.headers;
 
    //handler function jehetu onno file e thakbe tai, request related sob property shei handler k pass kore dite hobe. 
@@ -36,12 +36,12 @@ handler.handleReqRes = (req, res) =>{
   };
 
    //GET method request e query parameter gulo to query te pawa jai. POST request korar somoy server e kono data pathate hle, seta req er body te pathate hbe. etake directky pathano jai na borong streaming kore pathate hoi. streaming e buffer k pathano hobe. tarpor shei buffer theke data te convert kora hobe. toString() use kore UTF-8 encoding apply kore data ana already dekhechi buffer and streaming tutorial e. Tobe ekhn recommended way te dekhbo, encoding use kore.
-   //at first, event listener add korbo, req.on("data", func) diye. mane data event hle mane server theke data aslei ei callback function invoke hobe. R server theke to data asbe buffer datatype e. Ebar buffer k toString() ebong encoding apply kore data te convert na kore, node.js er recommended way te convert korbo stringDecoder module use kore. Jehetu eta ekta class return kore, mane constructor return kore. Tai age shei class er ekta object baniye nei.
+   //at first, event listener add korbo, req.on("data", func) diye. mane data event hle mane website theke server e data aslei ei callback function invoke hobe. R data to asbe buffer datatype e. Ebar buffer k toString() ebong encoding apply kore data te convert na kore, node.js er recommended way te convert korbo stringDecoder module use kore. Jehetu eta ekta class return kore, mane constructor return kore. Tai age shei class er ekta object baniye nei.
 
    const decoder = new StringDecoder('utf-8');
    let realData = "";
 
-   //end of variable declaration. Now decalre the handlers.
+   //end of variable declaration. Now declare the handlers.
 
    //check if the requested route from client exists or not. If exists, store reference of the the corresponding request handler function. If not, store reference of the notFoundHandler function.
    const chosenHandler = routes[trimmedPath] ? routes[trimmedPath] : notFoundHandler;
@@ -67,16 +67,16 @@ handler.handleReqRes = (req, res) =>{
       //include realData inside requestProperties. so that we can access the data sent by client in the requestProperties to perform processing.
       requestProperties.body = parseJSON(realData);
       //console.log(realData, requestProperties.body);
-      //ekhn realData holo, buffer theke stringDecoder use kore UTF-8 encoding kore buffer k string e convert kore save korchilam realData er vitor. kintu userHandler er vitor operations perform korte amader string theke object e convert korte hobe realData k JSON.parse diye. Tobe r ekta issue ache. amra user k trust korte parbo na j valid stringified object ba JSON pathabe. seta ensure korte amra utlity function use korechi, parseJSON. 
+      //ekhn realData holo, buffer theke stringDecoder use kore UTF-8 encoding kore buffer k string e convert kore save korchilam realData er vitor. kintu operations perform korte amader string theke object e convert korte hobe realData k JSON.parse diye. sejonno durectly object e convert kore requestProperies.body te pathano hocche. Tobe r ekta issue ache. amra user k trust korte parbo na j valid stringified object ba JSON pathabe. seta ensure korte amra utlity function use korechi, parseJSON. 
 
       //now invoke the chosenHandler function by passing the full requestProperties and the callback function. This callback function will be invoked inside the handler. Here, we have just delcared the function. Inside the handler, the callback function will be invoked with the statusCode depending on the status of execution and the respoce body or content it wants to send to the client. As we can see here, when the handler sends these two values, it attatches statusCode to the responce header and sends the responce (here marked as payload) to the client after stringtifying the responce from object
       chosenHandler(requestProperties, (statusCode, payload) => {
          //check statusCode and payload
           statusCode = typeof statusCode === 'number' ? statusCode : 500;
           payload = typeof payload === 'object' ? payload : {};
-   
+
+          //string e convert kore neya hocche karon, json o communicate korchi amra. object e na.
           const payloadString = JSON.stringify(payload);
-   
           
           //req e jemon client request er sathe header/metadata pathate pare. sevabe, res eo server, responce er sathe kichu header pathiye dite pare client k. by default kichu pathai o, jeta amra postman ei dekhte pai, reponce er sathe. ekhane amra reponce er sathe content-type header add korbo jate client bujhte pare, se server theke ki dhoroner ba format e data pacche. 
           res.setHeader('Content-Type', 'application/json');
