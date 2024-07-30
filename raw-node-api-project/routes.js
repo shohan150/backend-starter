@@ -9,7 +9,7 @@ const routes = {
     sample: sampleHandler,
     user: userHandler,
     token: tokenHandler,
-    check: chackHandler,
+    check: checkHandler,
 };
 
 module.exports = routes;

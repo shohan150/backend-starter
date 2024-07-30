@@ -11,6 +11,9 @@ const http = require('http');
 const {handleReqRes} = require('./helpers/handleReqRes');
 //environment variables
 const environment = require('./helpers/environments');
+
+//twilio test
+const { sendTwilioSms } = require('./helpers/notifications');
 //import data file
 //const data = require('./lib/data');
 
@@ -27,6 +30,11 @@ const app = {};
 // app.config={
 //    port: 3000 
 // };
+
+//twilio test
+sendTwilioSms('01234567890', 'Hello World', (res)=>{
+   console.log(`This is the error : ${res}`)
+})
 
 // application er mul kaj ekehane e hobe.
 app.handleReqRes = handleReqRes;

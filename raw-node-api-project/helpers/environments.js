@@ -6,14 +6,24 @@ const environments = {};
 environments.staging = {
     port: 3000,
     envName: 'staging',
-    secretKey: 'dummy123'
+    secretKey: 'dummy123',
+    twilio: {
+        fromPhone: '',
+        accountSid: '',
+        authToken: '',
+    },
 };
 
 // production environment
 environments.production = {
     port: 5000,
     envName: 'production',
-    secretKey: 'dummy456'
+    secretKey: 'dummy456',
+    twilio: {
+        fromPhone: '',
+        accountSid: '',
+        authToken: '',
+    },
 };
 //console.log(environments, process.env.NODE_ENV);
 
