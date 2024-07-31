@@ -114,6 +114,22 @@ lib.delete = (dir, file, callback) => {
    });
 };
 
+
+// list all the items in a directory. Amra normal CRUD er function gulo likhechi. kintu ekta folder theke sob file pawar jonno eta banacchi.
+lib.list = (dir, callback) => {
+    fs.readdir(`${lib.basedir + dir}/`, (err, fileNames) => {
+        if (!err && fileNames && fileNames.length > 0) {
+            const trimmedFileNames = [];
+            fileNames.forEach((fileName) => {
+                trimmedFileNames.push(fileName.replace('.json', ''));
+            });
+            callback(false, trimmedFileNames);
+        } else {
+            callback('Error reading directory!');
+        }
+    });
+};
+
 module.exports = lib;
 
 
