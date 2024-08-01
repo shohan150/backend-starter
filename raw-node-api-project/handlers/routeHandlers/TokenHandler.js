@@ -1,9 +1,8 @@
 //what is token based authentication? user login korle take server ekta unique number diye dibe. ekhn full application j feature gulote login required, segulote check korbo user er kache token number number ache kina. It is more like a short time password for the server to identify whether an user is authenticated or not.
 // dependencies
 const data = require('../../lib/data');
-const { hash } = require('../../helpers/utilities');
-const { createRandomString } = require('../../helpers/utilities');
-const { parseJSON } = require('../../helpers/utilities');
+const { parseJSON, hash, createRandomString } = require('../../helpers/utilities');
+
 
 // module scaffolding
 const handler = {};
@@ -76,6 +75,7 @@ handler._token.post = (requestProperties, callback) => {
     }
 };
 
+//get er asole kono kaj e nai apatoto. Rakha hoise sudhu. 
 handler._token.get = (requestProperties, callback) => {
     // check the token id if valid
     const id =

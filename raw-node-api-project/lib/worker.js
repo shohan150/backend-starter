@@ -56,6 +56,7 @@ worker.validateCheckData = (originalCheckData) => {
     }
 };
 
+
 // perform check. mane j url ta deya ache, shei url ta te niye, shei url e hit kore check poreform kore result dite hobe, up naki down.
 worker.performCheck = (originalCheckData) => {
     // prepare the initial check outcome
@@ -141,6 +142,9 @@ worker.processCheckOutcome = (originalCheckData, checkOutCome) => {
             ? 'up'
             : 'down';
 
+    //check if data is coming correctly or occuring error.
+    // console.log(checkOutCome);
+
     // decide whether we should alert the user or not. we'll alert the user only when state changes. tahole ei j responce e pawa state r original checkData te thaka state na mila mane state change hoyeche. 
     //tobe ekta edge case ache. ekhn default state to 'down'. tahole first time e url e hit kore up pele jananor kichu nai. karon seta actually change/update na. borong oitai prothom entry. tai lastChecked e kono value na thaka mane etai first check. sekhetre user k alert korar dorkai nai. 
     //pore theke jokhon proti min (1000 * 60) e loop e barbar call kora hote thakbe, tokhon state change hle user k alert korte hobe. 
@@ -151,6 +155,7 @@ worker.processCheckOutcome = (originalCheckData, checkOutCome) => {
 
     newCheckData.state = state;
     newCheckData.lastChecked = Date.now();
+
 
     // update the check to disk
     data.update('checks', newCheckData.id, newCheckData, (err) => {
@@ -195,7 +200,7 @@ worker.init = () => {
     worker.gatherAllChecks();
 
     // call the loop so that checks continue
-    worker.loop();
+     worker.loop();
 };
 
 // export

@@ -16,6 +16,7 @@ handler.handleReqRes = (req, res) =>{
    //The url.parse() method returns an object with each part of the address as properties. takes two parameters; urlString: holds the URL string which needs to parse. parseQueryString: whether to parse (parsing in simple words is conversion. in this case turn into an object) the query string in url. If set to true then the query property will be set to an object. If set to false then the query property will be an unparsed, undecoded string. The default value is false.
    const parseUrl = url.parse(req.url, true);
    //console.log(parseUrl); 
+   //pathname nicchi. path na. karon query ekhane nibo na. query neya lagbe checking er somoy, tokhon path nibo. kitu ekhane sudhu pathname.
    const path = parseUrl.pathname;
    const queryString = parseUrl.query;
    // using regex to remove the forward slash at the beginning and end of the link. So that we always get the link in the same format and then perform routing. Cause people may request the same page with forward slash at the end or not(/users or /users/) but we need to send data to client in both scenerio. 

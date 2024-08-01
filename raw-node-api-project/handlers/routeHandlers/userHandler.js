@@ -1,8 +1,7 @@
 //sob same url ei kaj korbe. /user/. kon method e request kora hocche tar upor depend kore server action nibe.
 // dependencies
 const data = require('../../lib/data');
-const { hash } = require('../../helpers/utilities');
-const { parseJSON } = require('../../helpers/utilities');
+const { parseJSON, hash } = require('../../helpers/utilities');
 const tokenHandler = require('./TokenHandler')
 
 // module scaffolding
@@ -10,7 +9,7 @@ const handler = {};
 
 handler.userHandler = (requestProperties, callback) => {
     const acceptedMethods = ['get', 'post', 'put', 'delete'];
-    //handleReqRes module e chosenHandler k invoke korar somoy 2 ta parameter diye deya hoeche. tar modde requestProperties er modde req er method ki seta deya ache. amra check korbo amader 4 ta method er konota te req kora hoyeche kina. jodi acceptedMethods er baire kono method er req kora hoi tahole .indexOF er result asbe -1. r thakle, index number ta asbe. Tar mane -1 er theke boro hle e array te ache. -1 asa mane array te nai. tahle callback e status code 405 pathai dao which means, the request is not allowed. r ekhane payload pathano lagche na callback er sathe. 
+    //handleReqRes module e chosenHandler k invoke korar somoy 2 ta parameter diye deya hoyeche. tar modde requestProperties er modde req er method ki seta deya ache. amra check korbo amader 4 ta method er konota te req kora hoyeche kina. jodi acceptedMethods er baire kono method er req kora hoi tahole .indexOf er result asbe -1. R thakle, index number ta asbe. Tar mane -1 er theke boro hle e array te ache. -1 asa mane array te nai. tahle callback e status code 405 pathai dao which means, the request is not allowed. r ekhane payload pathano lagche na callback er sathe.
     if (acceptedMethods.indexOf(requestProperties.method) > -1) {
       //condition meet hle, corresponding function k invoke kori useHandler e pawa 2 ta parameter diye. handler._users.methodName(requestProperties, callback);
         handler._users[requestProperties.method](requestProperties, callback);
@@ -106,7 +105,7 @@ handler._users.get = (requestProperties, callback) => {
             : false;
     if (phone) {
         //verify token
-        let token = typeof(requestProperties.headersObject.token) === "string"?requestProperties.headersObject.token : false;
+        let token = typeof(requestProperties.headersObject.token) === "string" ? requestProperties.headersObject.token : false;
 
         tokenHandler._token.verify(token, phone, (tokenId)=>{
             if(tokenId){
@@ -236,7 +235,7 @@ handler._users.delete = (requestProperties, callback) => {
     if (phone) {
         // lookup the user
         //verify token
-        let token = typeof(requestProperties.headersObject.token) === "string"?requestProperties.headersObject.token : false;
+        let token = typeof(requestProperties.headersObject.token) === "string" ? requestProperties.headersObject.token : false;
 
         tokenHandler._token.verify(token, phone, (tokenId)=>{
             if(tokenId){

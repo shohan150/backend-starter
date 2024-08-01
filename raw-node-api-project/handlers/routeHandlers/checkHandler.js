@@ -70,9 +70,9 @@ handler._check.post = (requestProperties, callback) => {
                                 //finally, save the object
                                 data.create('checks', checkId, checkObject, (err3)=>{
                                     if(!err3){
-                                        //err na thakle userObject e checkId k add kori.
+                                        //err na thakle userObject.checks e checkId k add kori.
                                         userObject.checks = userChecks;
-                                        userObject.checkObject.push(checkId)
+                                        userObject.checks.push(checkId);
 
                                         //save the new userData
                                         data.update('users', userPhone, userObject, (err4)=>{
@@ -124,9 +124,9 @@ handler._check.post = (requestProperties, callback) => {
 handler._check.get = (requestProperties, callback) => {
     // check the token if valid
     const id =
-    typeof requestProperties.queryStringObject.id === 'string' &&
-    requestProperties.queryStringObject.id.trim().length === 20
-        ? requestProperties.queryStringObject.id
+    typeof requestProperties.queryString.id === 'string' &&
+    requestProperties.queryString.id.trim().length === 20
+        ? requestProperties.queryString.id
         : false;
 
     if(id){
@@ -237,9 +237,9 @@ handler._check.put = (requestProperties, callback) => {
 
 handler._check.delete = (requestProperties, callback) => {
     const id =
-    typeof requestProperties.queryStringObject.id === 'string' &&
-    requestProperties.queryStringObject.id.trim().length === 20
-        ? requestProperties.queryStringObject.id
+    typeof requestProperties.queryString.id === 'string' &&
+    requestProperties.queryString.id.trim().length === 20
+        ? requestProperties.queryString.id
         : false;
 
     if(id){
@@ -273,7 +273,7 @@ handler._check.delete = (requestProperties, callback) => {
                                                     error : "Serve side problem"
                                                 })
                                             }
-                                        })
+                                         })
                                     } else {
                                         callback(500, {
                                             error : "The checkid is not found"
