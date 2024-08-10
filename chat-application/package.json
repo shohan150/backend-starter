@@ -4,8 +4,9 @@
   "description": "corporate chat application",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "set NODE_ENV = development && nodemon app.js",
+    "prod": "set NODE_ENV = prodeuction && node app.js",
+    "desc": "start korar somoy deya env variable automatically process.env te add hoye jabe. R production e to e nodemon er proyojon nai."
   },
   "author": "shohanur rahman",
   "license": "ISC",

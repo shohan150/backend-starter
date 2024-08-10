@@ -45,8 +45,16 @@ app.set("view engine", "ejs");
 
 app.use(express.static(path.join(__dirname, "public")));
 
+//parse cookies. security purpose e ekta secret key pass korbo cookie-parser e. tobe signed cookie na banate chaile eta deya lagbe na.
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
+//routing setup
 
+//error handling
+
+app.listen(process.env.PORT, ()=> {
+  console.log(`App listening to port: ${process.env.PORT}`);
+})
 
 
 
