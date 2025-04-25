@@ -4,7 +4,7 @@ const environments = {};
 //declare the types of environment variables
 // staging environment
 environments.staging = {
-    port: 3000,
+    port: 4000,
     envName: 'staging',
     secretKey: 'dummy123',
     twilio: {

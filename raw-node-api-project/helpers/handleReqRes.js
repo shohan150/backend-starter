@@ -60,6 +60,8 @@ handler.handleReqRes = (req, res) =>{
 
    //buffer pathano shes hoye gele end event fire kore.
    req.on("end",()=>{
+      console.log("ended");
+      
       //decoder er kaj shes. take seta janiye dao. 
       realData += decoder.end();
       //realData filled up. ekhon setake dekhte parbo server e. 
@@ -70,7 +72,7 @@ handler.handleReqRes = (req, res) =>{
       //console.log(realData, requestProperties.body);
       //ekhn realData holo, buffer theke stringDecoder use kore UTF-8 encoding kore buffer k string e convert kore save korchilam realData er vitor. kintu operations perform korte amader string theke object e convert korte hobe realData k JSON.parse diye. sejonno durectly object e convert kore requestProperies.body te pathano hocche. Tobe r ekta issue ache. amra user k trust korte parbo na j valid stringified object ba JSON pathabe. seta ensure korte amra utlity function use korechi, parseJSON. 
 
-      //now invoke the chosenHandler function by passing the full requestProperties and the callback function. This callback function will be invoked inside the handler. Here, we have just delcared the function. Inside the handler, the callback function will be invoked with the statusCode depending on the status of execution and the respoce body or content it wants to send to the client. As we can see here, when the handler sends these two values, it attatches statusCode to the responce header and sends the responce (here marked as payload) to the client after stringtifying the responce from object
+      //now invoke the chosenHandler function by passing the full requestProperties and the callback function. This callback function is just decalred/passed to the chosenHandler function here. This callback will be invoked inside the handler with the statusCode value (set by me depending on the status of execution) and the respoce body or content to be sent to the client. As we can see here, when the handler sends these two values, it attatches statusCode to the responce header and sends the responce (here marked as payload) to the client after stringtifying the responce from object
       chosenHandler(requestProperties, (statusCode, payload) => {
          //check statusCode and payload
           statusCode = typeof statusCode === 'number' ? statusCode : 500;

@@ -52,7 +52,8 @@ handler._users.post = (requestProperties, callback) => {
         requestProperties.body.tosAgreement
             ? requestProperties.body.tosAgreement
             : false;
-    //if all values provided, start processing
+    
+    //if all values provided, start processing. R hae. Folder create kore rakha lagbe. Folder create kora na thakle, folder create korar feature ekhono add kora hoi ni. 
     if (firstName && lastName && phone && password && tosAgreement) {
         // make sure that the user doesn't already exist. na thakle amra user create korbo r thakle error throw korbo callback e. tarmane requirement holo user na thaka ba error asle tokhon user create kora. data read korata requirement na. sejonno callback e sudhu error nile e hocche. data neyar dorkar nai.
         data.read('users', phone, (err1) => {
@@ -105,7 +106,7 @@ handler._users.get = (requestProperties, callback) => {
             : false;
     if (phone) {
         //verify token
-        let token = typeof(requestProperties.headersObject.token) === "string" ? requestProperties.headersObject.token : false;
+        let token = typeof(requestProperties.headersObject.token) === "string" ? requestProperties.headersObject.token : false;        
 
         tokenHandler._token.verify(token, phone, (tokenId)=>{
             if(tokenId){

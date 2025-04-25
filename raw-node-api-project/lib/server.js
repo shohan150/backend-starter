@@ -40,7 +40,7 @@ server.createServer =()=>{
    //this module takes a callback function what will create the server object and will handle request and response. 
    const createServer = http.createServer(server.handleReqRes);
 
-   createServer.listen(environment.port, ()=> {console.log(`listening to port ${environment.port}`)});
+   createServer.listen(environment.port, ()=> {console.log(`Server created successfully. Listening to port ${environment.port}`)});
 }
 
 

@@ -144,10 +144,12 @@ handler._token.put = (requestProperties, callback) => {
 //token delete mane asole user k logout kore deya.
 handler._token.delete = (requestProperties, callback) => {
     // check the token if valid
+    console.log(requestProperties.queryString);
+    
     const id =
-        typeof requestProperties.queryStringObject.id === 'string' &&
-        requestProperties.queryStringObject.id.trim().length === 20
-            ? requestProperties.queryStringObject.id
+        typeof requestProperties.queryString.id === 'string' &&
+        requestProperties.queryString.id.trim().length === 20
+            ? requestProperties.queryString.id
             : false;
 
     if (id) {
